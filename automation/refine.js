@@ -1,8 +1,9 @@
 const { chromium } = require("playwright");
 const axios = require("axios");
+const { spawn } = require("child_process");
 require("dotenv").config();
 
-// ================= CONFIG =================
+
 const SERPER_API_KEY = process.env.SERPER_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
 
@@ -21,7 +22,49 @@ const BLOCKED_DOMAINS = [
   ".pdf",
   "beyondchats.com"
 ];
+function extractJSON(text) {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}") + 1;
 
+  if (start === -1 || end === -1) {
+    throw new Error("No JSON object found in Gemini output");
+  }
+
+  return JSON.parse(text.slice(start, end));
+}
+function callGeminiPython(original, references) {
+  return new Promise((resolve, reject) => {
+    console.log("🧪 callGeminiPython invoked");
+
+    const py = spawn("python", ["gemini_runner.py"], {
+      env: process.env
+    });
+
+    let output = "";
+    let error = "";
+
+    py.stdout.on("data", data => {
+      console.log("🐍 PY:", data.toString());
+      output += data.toString();
+    });
+
+    py.stderr.on("data", data => {
+      console.error("🐍 PY ERR:", data.toString());
+      error += data.toString();
+    });
+
+    py.on("close", code => {
+      if (code !== 0) {
+        return reject(new Error(error || "Python exited with error"));
+      }
+      resolve(output.trim());
+    });
+
+    const payload = JSON.stringify({ original, references });
+    py.stdin.write(payload);
+    py.stdin.end(); // 🔥 REQUIRED
+  });
+}
 // ================= MAIN =================
 async function refineArticles() {
   console.log("🚀 Starting Phase 2: Reference Extraction (Clean Mode)");
@@ -31,6 +74,7 @@ async function refineArticles() {
   try {
     const res = await axios.get(BACKEND_URL);
     articles = res.data;
+
     console.log(`✅ Found ${articles.length} articles`);
   } catch {
     console.error("❌ Backend not reachable. Run `php artisan serve`");
@@ -42,7 +86,7 @@ async function refineArticles() {
   for (const article of articles) {
     console.log(`\n🔍 Processing: ${article.title}`);
     const page = await browser.newPage();
-
+    let referenceTexts = "";
     try {
       // 2️⃣ Google Search via Serper
       const searchRes = await axios.post(
@@ -78,7 +122,7 @@ async function refineArticles() {
         try {
           await page.goto(link, {
             waitUntil: "domcontentloaded",
-            timeout: 15000
+            timeout: 35000
           });
 
           const content = await page.evaluate(() => {
@@ -117,26 +161,62 @@ async function refineArticles() {
             console.log(`⚠️ Skipped (content too thin): ${link}`);
             continue;
           }
-
+          referenceTexts += `\n\n--- SOURCE: ${link} ---\n${content}`;
           console.log(`\n📄 Extracted from: ${link}`);
           console.log("--------------------------------------------------");
-          console.log(content.slice(0, 800));
-          console.log("--------------------------------------------------");
-
+          console.log(content.slice(0, 200));
+          
         } catch {
           console.log(`⚠️ Failed to scrape: ${link}`);
         }
       }
 
+    if (!referenceTexts) {
+        console.log("⚠️ No usable reference text, skipping article");
+        continue;
+      }
+
+      // 4️⃣ Gemini Rewrite + Summary
+       console.log("🤖 Gemini rewriting...");
+      const aiRaw = await callGeminiPython(
+        article.original_content,
+        referenceTexts
+      );
+
+       let aiResult;
+try {
+  aiResult = extractJSON(aiRaw);
+} catch (err) {
+  console.error("RAW GEMINI OUTPUT:\n", aiRaw);
+  throw err;
+}
+
+
+        if (!aiResult.updated_content) {
+        throw new Error("Gemini returned empty content");
+        }
+      const finalContent =
+        `${aiResult.updated_content}\n\n---\n` +
+        `**References used for improvement:**\n${externalLinks.join("\n")}`;
+
+      // 5️⃣ Update Laravel DB
+      await axios.put(`${BACKEND_URL}/${article.id}`, {
+        summary: aiResult.summary,
+        updated_content: finalContent,
+        references: JSON.stringify(externalLinks)
+      });
+
+      console.log(`✅ Successfully updated: ${article.title}`);
+
     } catch (err) {
-      console.error(`❌ Error processing "${article.title}":`, err.message);
+      console.error(`❌ Failed processing ${article.title}:`, err.message);
     } finally {
       await page.close();
     }
   }
 
   await browser.close();
-  console.log("\n🏁 Phase-2 Reference Extraction Completed");
+  console.log("\n🏁 ALL ARTICLES REFINED!");
 }
 
 // ================= RUN =================
