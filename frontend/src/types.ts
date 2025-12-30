@@ -1,19 +1,18 @@
-
 export interface Article {
-  id: string;
+  id: number;
   title: string;
-  description: string;
-  originalContent: string;
-  updatedContent: string;
-  imageUrl: string;
-  category: string;
-  author: string;
-  date: string;
+  summary: string;
+  original_content: string;
+  updated_content: string;
+  image_url?: string;
+  category?: string;
+  author?: string;
+  created_at?: string;
 }
 
 export type AppView = 'landing' | 'list' | 'comparison';
 
 export interface ViewState {
   currentView: AppView;
-  selectedArticleId?: string;
+  selectedArticleId?: number;
 }

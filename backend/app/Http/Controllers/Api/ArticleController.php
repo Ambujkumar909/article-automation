@@ -45,6 +45,7 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
 
         $article->update($request->only([
+            'summary',
             'updated_content',
             'references'
         ]));
