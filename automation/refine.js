@@ -75,6 +75,7 @@ async function refineArticles() {
     const res = await axios.get(BACKEND_URL);
     articles = res.data;
 
+
     console.log(`✅ Found ${articles.length} articles`);
   } catch {
     console.error("❌ Backend not reachable. Run `php artisan serve`");

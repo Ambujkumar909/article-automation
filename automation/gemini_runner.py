@@ -43,9 +43,7 @@ Reference Material:
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt,
-        config={
-        
-        "response_mime_type": "application/json" })
+        )
 
     text = response.text.strip()
 
