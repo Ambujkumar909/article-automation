@@ -35,6 +35,10 @@ BeyondChats-Intelligence/
 │   ├── tailwind.config.js    # Typography & Custom Theme Config
 │   └── index.css             # Tailwind Layer Directives
 └── README.md                 # Project Documentation
+
+
+
+
 🚀 Setup & Installation Guide
 1. Database Provisioning (Neon)
 Sign up at Neon.tech.
