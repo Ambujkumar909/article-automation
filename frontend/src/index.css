@@ -3,19 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color: #f3ebd6; /* Our custom beige */
-  color: #1a1815;
+  background-color: #FDFCF0;
+  color: #1A1A1A;
   overflow-x: hidden;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f3ebd6;
-}
-::-webkit-scrollbar-thumb {
-  background: #dfd8c2;
-  border-radius: 10px;
 }
