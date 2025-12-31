@@ -21,53 +21,33 @@ The architecture focuses on **latency reduction**, **serverless scalability**, a
 
 ```mermaid
 graph TD
-    %% ========================
-    %% Frontend Layer
-    %% ========================
-    subgraph Frontend["Client Layer — React 18 + Vite"]
-        UI["Premium Editorial UI"]
-        NAV["Custom History & Popstate Handler"]
-        MODAL["Dual-Scroll Comparison Modal"]
+    subgraph Frontend [Client: React 18 + Vite]
+        UI[Premium Editorial UI]
+        NAV[Custom Popstate History Logic]
+        MODAL[Dual-Scroll Comparison Engine]
     end
 
-    %% ========================
-    %% Stability Layer
-    %% ========================
-    subgraph KeepAlive["Stability Layer"]
-        CRON["Cron Heartbeat (Prevent Cold Start)"]
+    subgraph Keep_Alive [Stability Layer]
+        CRON[Cron-Job.org Heartbeat]
     end
 
-    %% ========================
-    %% Backend Layer
-    %% ========================
-    subgraph Backend["API Layer — Laravel 11 (Dockerized)"]
-        API["Stateless REST API"]
-        CONTROLLER["Article Transformation Controller"]
+    subgraph Backend [API Layer: Laravel 11 / Docker]
+        API[Stateless REST API]
+        CONTROLLER[Article Transformation Logic]
     end
 
-    %% ========================
-    %% Data Layer
-    %% ========================
-    subgraph DataLayer["Database — Neon Serverless Postgres"]
-        DB[(PostgreSQL :5432)]
+    subgraph Data_Layer [Database: Neon Serverless]
+        DB[(Postgres Port 5432)]
     end
 
-    %% ========================
-    %% Flow
-    %% ========================
-    CRON -->|"Pings API"| API
-    UI -->|"Fetches Articles"| API
+    %% Logic Flow
+    CRON -- "Pings API (Prevent Sleep)" --> API
+    UI -- "Consumes Articles" --> API
     API --> CONTROLLER
-    CONTROLLER -->|"Direct DB Handshake"| DB
-    NAV -->|"Intercepts Browser Back"| MODAL
+    CONTROLLER -- "Direct Handshake" --> DB
+    NAV -- "Intercepts Browser Back" --> MODAL
 
-
-
-
-
-
-
-
+____________________________________________________________________________________________________________________________________________________________________________
 📂 Project Structure
 
 BeyondChats-Intelligence/
