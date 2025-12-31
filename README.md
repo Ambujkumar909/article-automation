@@ -60,7 +60,13 @@ graph TD
     API --> CONTROLLER
     CONTROLLER -->|"Direct DB Handshake"| DB
     NAV -->|"Intercepts Browser Back"| MODAL
-'''mermaid
+
+
+
+
+
+
+
 
 📂 Project Structure
 
