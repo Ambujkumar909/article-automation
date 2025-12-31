@@ -16,24 +16,27 @@ The architecture focuses on **latency reduction**, **serverless scalability**, a
 ---
 
 
-📂 Project Structure
+### 📂 Project Structure
 
-
+```text
 BeyondChats-Intelligence/
-├── backend/                  # Laravel 11 PHP 8.2 API
+├── backend/                  # Laravel 11 · PHP 8.2 API
 │   ├── app/Models/           # Eloquent Schema Definitions
 │   ├── app/Http/Controllers/ # AI Data Marshalling
 │   ├── config/database.php   # Optimized Neon Connection Config
 │   ├── routes/api.php        # Protected API Routes
 │   └── Dockerfile            # Multi-stage Apache-PHP Production Build
+│
 ├── automation/               # Node.js AI Pipeline
 │   ├── scraper.js            # Playwright Headless Crawling Logic
 │   ├── refine.js             # Gemini 1.5 Flash Prompt Engineering
 │   └── package.json          # Pipeline Dependencies
+│
 ├── frontend/                 # React 18 + Vite SPA
 │   ├── src/App.jsx           # Core UI & Browser History Orchestration
 │   ├── tailwind.config.js    # Typography & Custom Theme Config
 │   └── index.css             # Tailwind Layer Directives
+│
 └── README.md                 # Project Documentation
 
 
