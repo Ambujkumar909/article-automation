@@ -46,6 +46,7 @@ graph TD
     CONTROLLER -- "Direct Handshake" --> DB
     NAV -- "Intercepts Browser Back" --> MODAL
 
+
 📂 Project Structure
 
 BeyondChats-Intelligence/
