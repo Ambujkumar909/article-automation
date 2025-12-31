@@ -101,7 +101,7 @@ return [
     'search_path' => 'public',
 
 
-    'sslmode' => 'require',
+
 
     // 🔥 MOST IMPORTANT PART
     'options' => extension_loaded('pdo_pgsql') ? [
