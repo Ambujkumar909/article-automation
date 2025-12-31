@@ -22,6 +22,8 @@ RUN apt-get update && apt-get install -y \
     mbstring \
     zip \
     gd \
+    pdo_pgsql \
+    pgsql \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
