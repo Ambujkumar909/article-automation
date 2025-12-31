@@ -15,39 +15,6 @@ The architecture focuses on **latency reduction**, **serverless scalability**, a
 
 ---
 
-## 🏗️ Technical Architecture & Flow
-
-### 📊 System Design
-
-```mermaid
-graph TD
-    subgraph Frontend [Client: React 18 + Vite]
-        UI[Premium Editorial UI]
-        NAV[Custom Popstate History Logic]
-        MODAL[Dual-Scroll Comparison Engine]
-    end
-
-    subgraph Keep_Alive [Stability Layer]
-        CRON[Cron-Job.org Heartbeat]
-    end
-
-    subgraph Backend [API Layer: Laravel 11 / Docker]
-        API[Stateless REST API]
-        CONTROLLER[Article Transformation Logic]
-    end
-
-    subgraph Data_Layer [Database: Neon Serverless]
-        DB[(Postgres Port 5432)]
-    end
-
-    %% Logic Flow
-    CRON -- "Pings API (Prevent Sleep)" --> API
-    UI -- "Consumes Articles" --> API
-    API --> CONTROLLER
-    CONTROLLER -- "Direct Handshake" --> DB
-    NAV -- "Intercepts Browser Back" --> MODAL
-
-____________________________________________________________________________________________________________________________________________________________________________
 📂 Project Structure
 
 BeyondChats-Intelligence/
@@ -263,4 +230,37 @@ Problem: Managing connection overhead in a serverless environment.
 Solution: Transitioned to Neon PostgreSQL using a Direct Connection (Port 5432). This simplified the architecture by removing the need for a secondary connection pooler while providing sub-millisecond query latency.
 
 © 2025 BeyondChats Editorial. Built for Technical Excellence by Ambuj Kumar.
+
+
+## 🏗️ Technical Architecture & Flow
+
+### 📊 System Design
+
+```mermaid
+graph TD
+    subgraph Frontend [Client: React 18 + Vite]
+        UI[Premium Editorial UI]
+        NAV[Custom Popstate History Logic]
+        MODAL[Dual-Scroll Comparison Engine]
+    end
+
+    subgraph Keep_Alive [Stability Layer]
+        CRON[Cron-Job.org Heartbeat]
+    end
+
+    subgraph Backend [API Layer: Laravel 11 / Docker]
+        API[Stateless REST API]
+        CONTROLLER[Article Transformation Logic]
+    end
+
+    subgraph Data_Layer [Database: Neon Serverless]
+        DB[(Postgres Port 5432)]
+    end
+
+    %% Logic Flow
+    CRON -- "Pings API (Prevent Sleep)" --> API
+    UI -- "Consumes Articles" --> API
+    API --> CONTROLLER
+    CONTROLLER -- "Direct Handshake" --> DB
+    NAV -- "Intercepts Browser Back" --> MODAL
 
