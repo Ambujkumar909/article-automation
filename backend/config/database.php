@@ -104,7 +104,7 @@ return [
     // 🔥 MOST IMPORTANT PART
     'options' => extension_loaded('pdo_pgsql') ? [
         PDO::ATTR_PERSISTENT => true,
-
+        PDO::ATTR_TIMEOUT => 10,
     ] : [],
 ],
 
