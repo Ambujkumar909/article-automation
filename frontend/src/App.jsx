@@ -185,10 +185,16 @@ const App = () => {
                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-black/30 mb-8">
                     <BookOpen size={14} /> The Original Archive
                   </div>
-                  <div className="flex-1 overflow-y-auto pr-6 custom-scrollbar font-serif italic text-black/60">
-                    <ReactMarkdown>{selected.original_content}</ReactMarkdown>
+                  <div className="flex-1 overflow-y-auto pr-6 custom-scrollbar">
+                    <div className="prose prose-sm prose-slate max-w-none 
+                      font-serif leading-relaxed italic text-black/60
+                      prose-headings:font-serif prose-headings:text-black/40 prose-headings:mb-4
+                      prose-p:mb-6 prose-li:mb-2 prose-strong:text-black/70">
+                      <ReactMarkdown>{selected.original_content}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
+
                 
                 <div className="flex flex-col h-full bg-white rounded-[4rem] p-8 md:p-16 shadow-2xl border border-black/5">
                   <div className="flex items-center gap-2 text-[#2563eb] text-[10px] font-black uppercase mb-12">
