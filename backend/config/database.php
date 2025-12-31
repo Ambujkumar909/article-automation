@@ -87,26 +87,24 @@ return [
     'driver' => 'pgsql',
 
     // ❌ Do NOT use DB_URL with Supabase
-    'url' => null,
+
 
     'host' => env('DB_HOST'),
-    'port' => env('DB_PORT', 5432),
+    'port' => env('DB_PORT', 6543),
     'database' => env('DB_DATABASE'),
     'username' => env('DB_USERNAME'),
     'password' => env('DB_PASSWORD'),
 
     'charset' => 'utf8',
-    'prefix' => '',
-    'prefix_indexes' => true,
-    'search_path' => 'public',
+
 
 
 
 
     // 🔥 MOST IMPORTANT PART
     'options' => extension_loaded('pdo_pgsql') ? [
-        PDO::ATTR_PERSISTENT => false,
-        PDO::ATTR_TIMEOUT => 20,
+        PDO::ATTR_PERSISTENT => true,
+        PDO::ATTR_TIMEOUT => 10,
     ] : [],
 ],
 
