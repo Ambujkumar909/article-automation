@@ -21,31 +21,45 @@ The architecture focuses on **latency reduction**, **serverless scalability**, a
 
 ```mermaid
 graph TD
-    subgraph Frontend [Client: React 18 + Vite]
-        UI[Premium Editorial UI]
-        NAV[Custom Popstate History Logic]
-        MODAL[Dual-Scroll Comparison Engine]
+    %% ========================
+    %% Frontend Layer
+    %% ========================
+    subgraph Frontend["Client Layer — React 18 + Vite"]
+        UI["Premium Editorial UI"]
+        NAV["Custom History & Popstate Handler"]
+        MODAL["Dual-Scroll Comparison Modal"]
     end
 
-    subgraph Keep_Alive [Stability Layer]
-        CRON[Cron-Job.org Heartbeat]
+    %% ========================
+    %% Stability Layer
+    %% ========================
+    subgraph KeepAlive["Stability Layer"]
+        CRON["Cron Heartbeat (Prevent Cold Start)"]
     end
 
-    subgraph Backend [API Layer: Laravel 11 / Docker]
-        API[Stateless REST API]
-        CONTROLLER[Article Transformation Logic]
+    %% ========================
+    %% Backend Layer
+    %% ========================
+    subgraph Backend["API Layer — Laravel 11 (Dockerized)"]
+        API["Stateless REST API"]
+        CONTROLLER["Article Transformation Controller"]
     end
 
-    subgraph Data_Layer [Database: Neon Serverless]
-        DB[(Postgres Port 5432)]
+    %% ========================
+    %% Data Layer
+    %% ========================
+    subgraph DataLayer["Database — Neon Serverless Postgres"]
+        DB[(PostgreSQL :5432)]
     end
 
-    %% Logic Flow
-    CRON -- "Pings API (Prevent Sleep)" --> API
-    UI -- "Consumes Articles" --> API
+    %% ========================
+    %% Flow
+    %% ========================
+    CRON -->|"Pings API"| API
+    UI -->|"Fetches Articles"| API
     API --> CONTROLLER
-    CONTROLLER -- "Direct Handshake" --> DB
-    NAV -- "Intercepts Browser Back" --> MODAL
+    CONTROLLER -->|"Direct DB Handshake"| DB
+    NAV -->|"Intercepts Browser Back"| MODAL
 
 
 📂 Project Structure
