@@ -18,6 +18,7 @@ The architecture focuses on **latency reduction**, **serverless scalability**, a
 ## 🏗️ Technical Architecture & Flow
 
 ### 📊 System Design
+
 ```mermaid
 graph TD
     subgraph Frontend [Client: React 18 + Vite]
